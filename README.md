@@ -1,4 +1,21 @@
-# FODX Facture (PWA)
+# FODX Facture
+
+[![PWA](https://img.shields.io/badge/PWA-installable-1b2a49)](https://fouad-dev101.github.io/fodx-facture/)
+
+## Obtenir l’application
+
+| Plateforme | Lien | Comment |
+|---|---|---|
+| **Site web** | https://fouad-dev101.github.io/fodx-facture/ | Ouvrir dans le navigateur |
+| **Android** | [Page d’installation](https://fouad-dev101.github.io/fodx-facture/get.html) | Chrome › « Installer l’application » |
+| **Windows / Mac** | [Page d’installation](https://fouad-dev101.github.io/fodx-facture/get.html) | Chrome ou Edge › icône d’installation |
+| **iPhone** | [Page d’installation](https://fouad-dev101.github.io/fodx-facture/get.html) | Safari › Partager › Sur l’écran d’accueil |
+
+Scanner pour ouvrir sur téléphone : <img src="icons/qr-app.png" alt="QR code FODX Facture" width="120">
+
+> Pas encore d’APK Android ni d’installeur Windows (.exe) : l’installation se fait via le navigateur (PWA).
+> Les liens ci-dessus ne fonctionnent qu’après activation de GitHub Pages (Settings › Pages).
+
 
 Application de devis et factures en MAD. Aucune dépendance serveur, aucun compte, aucune API payante.
 Les données restent **uniquement dans le navigateur de l’appareil** (localStorage). Il n’y a **pas** de synchronisation cloud.
@@ -15,7 +32,7 @@ icons/                  icônes 192, 512, maskable, apple-touch
 ## Lancer en local
 Le service worker exige HTTP(S) (ou `localhost`), pas `file://`.
 ```
-cd fodx-pwa
+cd fodx-facture
 python3 -m http.server 8080      # ou : npx serve .
 ```
 Ouvrez http://localhost:8080
