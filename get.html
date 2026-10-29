@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Installer FODX Facture</title><meta name="theme-color" content="#1b2a49"><link rel="icon" href="icons/icon-192.png">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--ink:#16213a;--mut:#69708a;--ln:#e3dfd5;--ac:#1b2a49;--am:#d9962b;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root{--bg:#10141f;--sf:#181e2e;--ink:#eceff7;--mut:#9aa3bd;--ln:#2a3248;--ac:#e9edf9}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}h1{font-size:26px;margin:0 0 6px;letter-spacing:-.02em}p{margin:0 0 12px}.m{color:var(--mut)}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:18px;margin:14px 0}.card h2{font-size:17px;margin:0 0 8px}.card.on{border-color:var(--am);box-shadow:0 0 0 2px color-mix(in srgb,var(--am) 35%,transparent)}
+ol{margin:0;padding-left:20px}a.b{display:inline-block;background:var(--ac);color:var(--bg);padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none;min-height:44px}
+a:focus-visible{outline:2px solid var(--am);outline-offset:2px}img{max-width:140px;border-radius:8px;background:#fff;padding:6px}.row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+</style></head><body><main>
+<h1>Installer FODX Facture</h1><p class="m">Devis et factures en MAD. Gratuit, sans compte. Vos données restent sur votre appareil.</p>
+<div class="card"><h2>Site web</h2><p>Utilisez l’application directement dans le navigateur.</p><a class="b" href="./">Ouvrir l’application</a></div>
+<div class="card" id="android"><h2>Android</h2><div class="row"><ol><li>Ouvrez l’application dans <b>Chrome</b>.</li><li>Appuyez sur <b>Installer l’app</b> en haut, ou sur ⋮ › <b>Installer l’application</b>.</li></ol><div><img src="icons/qr-app.png" alt="QR code pour ouvrir l’application"><p class="m">Scannez avec votre téléphone</p></div></div></div>
+<div class="card" id="pc"><h2>Windows et Mac</h2><ol><li>Ouvrez l’application dans <b>Chrome</b> ou <b>Edge</b>.</li><li>Cliquez sur l’icône d’installation dans la barre d’adresse, ou sur <b>Installer l’app</b>.</li></ol></div>
+<div class="card" id="ios"><h2>iPhone</h2><ol><li>Ouvrez l’application dans <b>Safari</b>.</li><li>Partager › <b>Sur l’écran d’accueil</b>.</li></ol></div>
+<p class="m">Important : les données sont enregistrées uniquement sur l’appareil. Exportez une sauvegarde JSON régulièrement (Réglages › Sauvegarde). FODX Facture ne garantit pas la conformité fiscale : vérifiez vos obligations avec un comptable.</p>
+<p class="m"><a href="https://github.com/Fouad-dev101/fodx-facture">Code source</a></p></main>
+<script>const u=navigator.userAgent,id=/Android/i.test(u)?'android':/iPhone|iPad|iPod/i.test(u)?'ios':'pc';document.getElementById(id).classList.add('on')</script>
+</body></html>
