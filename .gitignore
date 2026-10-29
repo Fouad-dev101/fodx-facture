@@ -1,0 +1,5 @@
+.DS_Store
+Thumbs.db
+node_modules/
+*.zip
+fodx-facture-sauvegarde-*.json   # your backup exports contain real client data
