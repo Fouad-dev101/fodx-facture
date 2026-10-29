@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FODX Facture — Devis et factures pour le Maroc</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1b2a49">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FODX">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="vendor/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--ink:#16213a;--mut:#69708a;--ln:#e3dfd5;--ac:#1b2a49;--am:#d9962b;--tl:#0f766e;--ok:#0f766e;--wa:#b45309;--bd:#b42318;--acT:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141f;--sf:#181e2e;--ink:#eceff7;--mut:#9aa3bd;--ln:#2a3248;--ac:#e9edf9;--acT:#10141f;--am:#f0b04a;--tl:#3cc1b3;--ok:#3cc1b3;--wa:#f0b04a;--bd:#ff8a7a}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Manrope,system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:inherit}h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}h2{font-size:16px;margin:0 0 10px}
+header{background:var(--sf);border-bottom:1px solid var(--ln);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{max-width:1040px;margin:auto;padding:10px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:800;font-size:19px;letter-spacing:-.03em;display:flex;align-items:center;gap:8px;cursor:pointer;background:none;border:0;color:var(--ink);padding:0;font-family:inherit}
+.mk{width:22px;height:22px;background:var(--ac);border-radius:6px;position:relative;display:inline-block}.mk:after{content:"";position:absolute;right:-3px;bottom:-3px;width:10px;height:10px;background:var(--am);border-radius:3px}
+.brand span{font-weight:500;color:var(--mut)}
+nav{display:flex;gap:2px;flex:1;flex-wrap:wrap}nav button{background:none;border:0;padding:8px 12px;border-radius:8px;font:inherit;font-weight:700;color:var(--mut);cursor:pointer}nav button.on{background:var(--bg);color:var(--ink)}
+main{max-width:1040px;margin:auto;padding:20px 16px 60px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ln);background:var(--sf);color:var(--ink);padding:9px 14px;border-radius:9px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.btn.p{background:var(--ac);color:var(--acT);border-color:var(--ac)}.btn.d{color:var(--bd)}.btn.s{padding:5px 10px;font-size:13px}.btn[disabled]{opacity:.5;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--am);outline-offset:2px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:18px;margin-bottom:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.kpi{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:14px}.kpi small{color:var(--mut);font-weight:700;display:block}.kpi b{font-size:21px;letter-spacing:-.02em}
+label{display:block;font-weight:700;font-size:13px;margin:0 0 4px}.h{font-weight:500;color:var(--mut);font-size:12px}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}textarea{min-height:70px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sp{justify-content:space-between}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;padding:8px;border-bottom:1px solid var(--ln)}td{padding:10px 8px;border-bottom:1px solid var(--ln);vertical-align:top}.r{text-align:right;white-space:nowrap}
+.bg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:800;background:var(--bg);border:1px solid var(--ln)}
+.bg.ok{color:var(--ok)}.bg.wa{color:var(--wa)}.bg.bd{color:var(--bd)}.bg.q{color:var(--ac)}
+.err{background:color-mix(in srgb,var(--bd) 12%,transparent);border:1px solid var(--bd);color:var(--bd);padding:10px 12px;border-radius:9px;margin:12px 0;font-weight:700}
+.note{background:color-mix(in srgb,var(--am) 16%,transparent);border:1px solid var(--am);padding:10px 12px;border-radius:9px;margin-bottom:14px;font-size:14px}
+.emp{text-align:center;padding:28px 12px;color:var(--mut)}.tot{margin-left:auto;max-width:320px}.tot div{display:flex;justify-content:space-between;padding:4px 0}.tot .t{font-size:19px;font-weight:800;border-top:2px solid var(--ink);margin-top:6px;padding-top:8px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ac);color:var(--acT);padding:10px 16px;border-radius:10px;font-weight:700;display:none;z-index:9;max-width:90%}
+.ft{color:var(--mut);font-size:12px;margin-top:28px}
+@media(max-width:640px){.hm{display:none}h1{font-size:21px}main{padding:14px 12px 80px}.bar{gap:8px}nav{order:3;flex-basis:100%;overflow-x:auto;flex-wrap:nowrap}nav button{white-space:nowrap}input,select,textarea{font-size:16px}.tot{max-width:none}}
+@media(pointer:coarse){.btn{min-height:44px}.btn.s{min-height:40px}nav button{min-height:44px}}
+html,body{overflow-x:hidden}
+</style>
+</head>
+<body>
+<header><div class="bar"><button class="brand" onclick="go('/')" aria-label="Accueil"><i class="mk"></i>FODX <span>Facture</span></button>
+<nav id="nav"></nav><button class="btn p s" onclick="go('/edit/new-devis')">+ Devis</button><button class="btn s" onclick="go('/edit/new-facture')">+ Facture</button><button id="inst" class="btn s" style="display:none">Installer l’app</button></div></header>
+<main id="app" tabindex="-1"></main>
+<div id="toast" role="status"></div>
+<script>
+const K='fodx_facture_v1',$=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let db={profile:{},clients:[],docs:[],seq:{}},storeOK=true,corrupt=false;
+try{const r=localStorage.getItem(K);if(r){try{db=Object.assign(db,JSON.parse(r))}catch(e){corrupt=true;try{localStorage.setItem(K+'_corrompu_'+Date.now(),r)}catch(e2){}}}}catch(e){storeOK=false}
+db.profile=db.profile||{};db.seq=db.seq||{};if(!Array.isArray(db.clients))db.clients=[];if(!Array.isArray(db.docs))db.docs=[];
+function save(){try{localStorage.setItem(K,JSON.stringify(db))}catch(e){storeOK=false;toast('Enregistrement impossible : exportez vos données.')}}
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const addDays=(s,n)=>{const d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
+const fd=s=>s?s.split('-').reverse().join('/'):'';
+const num=s=>parseFloat(String(s).replace(',','.'))||0;
+const toC=s=>{const n=Number(String(s).trim().replace(/\s/g,'').replace(',','.')+'e2');return isFinite(n)?Math.round(n):0};
+const fmt=c=>{const n=c<0,a=Math.abs(c),i=String(Math.floor(a/100)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');return(n?'-':'')+i+','+String(a%100).padStart(2,'0')+' MAD'};
+const find=id=>db.docs.find(d=>d.id===id),cl=id=>db.clients.find(c=>c.id===id);
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',3200)};
+function calc(d){let sub=0;for(const l of d.lines)sub+=Math.round(num(l.q)*toC(l.p));const disc=Math.round(sub*num(d.discount)/100),base=sub-disc,tva=Math.round(base*num(d.tva)/100),total=base+tva,paid=(d.payments||[]).reduce((a,p)=>a+p.amt,0);return{sub,disc,base,tva,total,paid,rest:total-paid}}
+function status(d){if(d.type==='devis')return d.status==='Envoyé'&&d.due<today()?'Expiré':d.status;
+ if(d.status==='Brouillon')return'Brouillon';const c=calc(d);if(c.total>0&&c.rest<=0)return'Payée';if(c.paid>0)return'Partiellement payée';return d.due<today()?'En retard':'Émise'}
+const isLate=d=>d.type==='facture'&&d.status!=='Brouillon'&&calc(d).rest>0&&d.due<today();
+const bcls=s=>({'Payée':'ok','Accepté':'ok','Émise':'q','Envoyé':'q','En retard':'bd','Refusé':'bd','Expiré':'bd','Partiellement payée':'wa'}[s]||'');
+const badge=s=>`<span class="bg ${bcls(s)}">${esc(s)}</span>`;
+const locked=d=>(d.type==='facture'&&d.status!=='Brouillon')||!!d.invoiceId;
+function nextNo(t){const P=db.profile,y=new Date().getFullYear(),k=t+y;db.seq[k]=(db.seq[k]||0)+1;return(t==='devis'?(P.pDev||'DEV'):(P.pFac||'FAC'))+'-'+y+'-'+String(db.seq[k]).padStart(4,'0')}
+/* routing */
+let R=location.hash.slice(1)||'/',EDIT=null,flt={};
+function go(p){R=p;try{location.hash=p}catch(e){}render()}
+addEventListener('hashchange',()=>{const h=location.hash.slice(1)||'/';if(h!==R){R=h;render()}});
+function render(){const [p,q]=R.split('?'),[,a,b]=p.split('/');const A=$('#app');
+ $('#nav').innerHTML=[['/','Tableau de bord'],['/docs','Documents'],['/clients','Clients'],['/settings','Réglages']].map(([h,t])=>`<button class="${(h==='/'?p==='/':p.startsWith(h))?'on':''}" onclick="go('${h}')">${t}</button>`).join('');
+ A.innerHTML=a==='docs'?vDocs():a==='clients'?vClients():a==='client'?vClient(b):a==='settings'?vSet():a==='doc'?vDoc(b):a==='edit'?vEdit(b,q):vDash();
+ if(a==='docs')tbl();scrollTo(0,0)}
+const warn='<p class="ft">FODX Facture n’est pas un logiciel de comptabilité et ne garantit pas la conformité fiscale. Vérifiez vos obligations (TVA, mentions légales) auprès d’un comptable ou de l’administration compétente.</p>';
+const storeNote=()=>`<div class="note">Vos données sont enregistrées <b>uniquement dans ce navigateur</b> sur cet appareil (pas de sauvegarde cloud). Exportez régulièrement une copie dans Réglages › Sauvegarde.${storeOK?'':' <b>Stockage indisponible : rien ne sera conservé.</b>'}</div>`;
+/* dashboard */
+function vDash(){const f=db.docs.filter(d=>d.type==='facture'&&d.status!=='Brouillon');let inv=0,rec=0;f.forEach(d=>{const c=calc(d);inv+=c.total;rec+=c.paid});
+ const late=f.filter(isLate),lateAmt=late.reduce((a,d)=>a+calc(d).rest,0),nd=t=>db.docs.filter(d=>d.type===t).length;
+ const rec6=[...db.docs].sort((a,b)=>(b.upd||'').localeCompare(a.upd||'')).slice(0,6);
+ return`<h1>Tableau de bord</h1><p class="h">Chiffres calculés à partir de vos documents enregistrés.</p>${storeNote()}
+ ${!db.clients.length&&!db.docs.length?`<div class="card"><h2>Pour commencer</h2><ol><li><a href="#/settings" onclick="go('/settings');return false">Renseignez votre entreprise</a> (nom, adresse, ICE si vous en avez un).</li><li><a href="#/client/new" onclick="go('/client/new');return false">Ajoutez un client</a>.</li><li>Créez un <a href="#/edit/new-devis" onclick="go('/edit/new-devis');return false">devis</a>, puis exportez-le en PDF.</li></ol></div>`:''}
+ <div class="grid"><div class="kpi"><small>Clients</small><b>${db.clients.length}</b></div><div class="kpi"><small>Devis</small><b>${nd('devis')}</b></div><div class="kpi"><small>Factures</small><b>${nd('facture')}</b></div></div><br>
+ <div class="grid"><div class="kpi"><small>Facturé (hors brouillons)</small><b>${fmt(inv)}</b></div><div class="kpi"><small>Encaissé</small><b>${fmt(rec)}</b></div><div class="kpi"><small>Reste à encaisser</small><b>${fmt(inv-rec)}</b></div><div class="kpi"><small>En retard (${late.length})</small><b style="color:var(--bd)">${fmt(lateAmt)}</b></div></div><br>
+ ${late.length?`<div class="card"><h2>Factures en retard</h2>${late.map(d=>`<div class="row sp"><a href="#/doc/${d.id}" onclick="go('/doc/${d.id}');return false">${esc(d.number)} · ${esc((cl(d.clientId)||{}).name||'—')}</a><span>${fmt(calc(d).rest)} · échue le ${fd(d.due)}</span></div>`).join('')}</div>`:''}
+ <div class="card"><h2>Activité récente</h2>${rec6.length?`<div class="tw"><table>${rec6.map(d=>`<tr><td><a href="#/doc/${d.id}" onclick="go('/doc/${d.id}');return false">${esc(d.number)}</a></td><td class="hm">${esc((cl(d.clientId)||{}).name||'—')}</td><td class="r">${fmt(calc(d).total)}</td><td>${badge(status(d))}</td></tr>`).join('')}</table></div>`:'<div class="emp">Aucune activité pour le moment.</div>'}</div>${warn}`}
+/* documents */
+function vDocs(){return`<div class="row sp"><h1>Documents</h1></div><div class="card"><div class="grid">
+<div><label for="fq">Recherche</label><input id="fq" oninput="flt.q=this.value;tbl()" value="${esc(flt.q||'')}" placeholder="N° ou client"></div>
+<div><label for="ft">Type</label><select id="ft" onchange="flt.t=this.value;tbl()"><option value="">Tous</option><option value="devis"${flt.t==='devis'?' selected':''}>Devis</option><option value="facture"${flt.t==='facture'?' selected':''}>Factures</option></select></div>
+<div><label for="fc">Client</label><select id="fc" onchange="flt.c=this.value;tbl()"><option value="">Tous</option>${db.clients.map(c=>`<option value="${c.id}"${flt.c===c.id?' selected':''}>${esc(c.name)}</option>`).join('')}</select></div>
+<div><label for="fs">Statut</label><select id="fs" onchange="flt.s=this.value;tbl()"><option value="">Tous</option>${['Brouillon','Envoyé','Accepté','Refusé','Expiré','Émise','Partiellement payée','Payée','En retard'].map(s=>`<option${flt.s===s?' selected':''}>${s}</option>`).join('')}</select></div>
+<div><label for="fa">Du</label><input id="fa" type="date" onchange="flt.a=this.value;tbl()" value="${flt.a||''}"></div><div><label for="fb">Au</label><input id="fb" type="date" onchange="flt.b=this.value;tbl()" value="${flt.b||''}"></div></div></div><div class="card tw" id="tbl"></div>`}
+function tbl(){const q=(flt.q||'').toLowerCase();const L=db.docs.filter(d=>{const c=cl(d.clientId)||{};return(!flt.t||d.type===flt.t)&&(!flt.c||d.clientId===flt.c)&&(!flt.s||status(d)===flt.s)&&(!flt.a||d.issue>=flt.a)&&(!flt.b||d.issue<=flt.b)&&(!q||(d.number+' '+(c.name||'')).toLowerCase().includes(q))}).sort((a,b)=>b.issue.localeCompare(a.issue)||b.number.localeCompare(a.number));
+ $('#tbl').innerHTML=L.length?`<table><tr><th>N°</th><th class="hm">Client</th><th class="hm">Date</th><th class="r">Total</th><th>Statut</th><th></th></tr>${L.map(d=>`<tr><td><a href="#/doc/${d.id}" onclick="go('/doc/${d.id}');return false"><b>${esc(d.number)}</b></a><div class="h">${d.type==='devis'?'Devis':'Facture'}</div></td><td class="hm">${esc((cl(d.clientId)||{}).name||'—')}</td><td class="hm">${fd(d.issue)}</td><td class="r">${fmt(calc(d).total)}</td><td>${badge(status(d))}</td><td class="r"><button class="btn s" onclick="pdf('${d.id}')">PDF</button> <button class="btn s" onclick="dup('${d.id}')">Dupliquer</button></td></tr>`).join('')}</table>`:`<div class="emp">${db.docs.length?'Aucun document ne correspond aux filtres.':'Aucun document. Créez votre premier devis avec « + Devis ».'}</div>`}
+/* clients */
+function vClients(){const q=(flt.cq||'').toLowerCase();const L=db.clients.filter(c=>!q||(c.name+' '+(c.phone||'')+' '+(c.email||'')).toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name));
+ return`<div class="row sp"><h1>Clients</h1><button class="btn p" onclick="go('/client/new')">+ Client</button></div><div class="card"><input aria-label="Rechercher un client" placeholder="Rechercher un client…" value="${esc(flt.cq||'')}" oninput="flt.cq=this.value;go2()"><div class="tw" style="margin-top:10px">${L.length?`<table>${L.map(c=>`<tr><td><a href="#/client/${c.id}" onclick="go('/client/${c.id}');return false"><b>${esc(c.name)}</b></a><div class="h">${esc(c.phone||c.email||'')}</div></td><td class="r">${db.docs.filter(d=>d.clientId===c.id).length} doc.</td></tr>`).join('')}</table>`:`<div class="emp">${db.clients.length?'Aucun résultat.':'Aucun client. Ajoutez-en un pour créer vos documents.'}</div>`}</div></div>`}
+function go2(){const v=$('input[aria-label^="Rechercher"]');const s=v.selectionStart;render();const n=$('input[aria-label^="Rechercher"]');n.focus();n.setSelectionRange(s,s)}
+function vClient(id){const c=id==='new'?{}:cl(id);if(!c)return nf();const ds=db.docs.filter(d=>d.clientId===c.id);
+ return`<h1>${c.id?esc(c.name):'Nouveau client'}</h1><div class="card"><div class="grid g2">
+ ${[['n','Nom / raison sociale *',c.name],['ph','Téléphone',c.phone],['em','E-mail',c.email],['ad','Adresse',c.address],['ic','ICE (si entreprise)',c.ice]].map(([k,t,v])=>`<div><label for="c_${k}">${t}</label><input id="c_${k}" value="${esc(v||'')}"></div>`).join('')}</div>
+ <div id="cerr"></div><div class="row" style="margin-top:12px"><button class="btn p" onclick="saveClient('${c.id||''}')">Enregistrer</button><button class="btn" onclick="go('/clients')">Retour</button>${c.id?`<button class="btn d" onclick="delClient('${c.id}')">Supprimer</button>`:''}</div></div>
+ ${c.id?`<div class="card"><div class="row sp"><h2>Historique</h2><span class="row"><button class="btn s" onclick="go('/edit/new-devis?c=${c.id}')">+ Devis</button><button class="btn s" onclick="go('/edit/new-facture?c=${c.id}')">+ Facture</button></span></div>${ds.length?`<div class="tw"><table>${ds.sort((a,b)=>b.issue.localeCompare(a.issue)).map(d=>`<tr><td><a href="#/doc/${d.id}" onclick="go('/doc/${d.id}');return false">${esc(d.number)}</a></td><td>${fd(d.issue)}</td><td class="r">${fmt(calc(d).total)}</td><td>${badge(status(d))}</td></tr>`).join('')}</table></div>`:'<div class="emp">Aucun document pour ce client.</div>'}</div>`:''}`}
+function saveClient(id){const v=k=>$('#c_'+k).value.trim(),n=v('n');const e=[];if(!n)e.push('Le nom est obligatoire.');
+ const em=v('em');if(em&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))e.push('E-mail invalide.');
+ if(db.clients.some(c=>c.id!==id&&c.name.toLowerCase()===n.toLowerCase()))e.push('Un client portant ce nom existe déjà.');
+ if(e.length){$('#cerr').innerHTML=`<div class="err" role="alert">${e.join('<br>')}</div>`;return}
+ const o={name:n,phone:v('ph'),email:em,address:v('ad'),ice:v('ic')};if(id)Object.assign(cl(id),o);else db.clients.push({id:uid(),...o});save();toast('Client enregistré.');go('/clients')}
+function delClient(id){if(db.docs.some(d=>d.clientId===id)){toast('Impossible : ce client a des documents.');return}if(confirm('Supprimer ce client ?')){db.clients=db.clients.filter(c=>c.id!==id);save();go('/clients')}}
+/* editor */
+const nf=()=>'<div class="emp">Élément introuvable. <button class="btn" onclick="go(\'/\')">Accueil</button></div>';
+function vEdit(id,q){let d;if(id.startsWith('new-')){const t=id.slice(4),P=db.profile,cid=new URLSearchParams(q||'').get('c')||'';d={id:uid(),type:t,number:'',clientId:cl(cid)?cid:'',status:'Brouillon',issue:today(),due:addDays(today(),t==='devis'?30:+(P.terms??30)),lines:[{d:'',q:'1',p:''}],discount:'0',tva:String(P.tva||0),notes:'',terms:t==='facture'?(P.payTerms||''):'',payments:[],isNew:true}}
+ else{const o=find(id);if(!o)return nf();d=JSON.parse(JSON.stringify(o))}
+ EDIT=d;const L=locked(d),dv=d.type==='devis',dis=L?' disabled':'';
+ return`<h1>${d.isNew?'Nouveau':'Modifier'} ${dv?'devis':'facture'}${d.number?' '+esc(d.number):''}</h1>
+ ${L?'<div class="note">Document verrouillé (facture émise ou devis déjà facturé) : seuls les dates et les notes sont modifiables. Pour changer les montants d’une facture sans paiement, repassez-la en brouillon depuis sa fiche.</div>':''}
+ <form id="ed" class="card" onsubmit="return false" oninput="ein(event)" onchange="ein(event)"><div class="grid g2">
+ <div><label for="e_c">Client *</label><select id="e_c" data-k="clientId"${dis}><option value="">— Choisir —</option>${db.clients.map(c=>`<option value="${c.id}"${c.id===d.clientId?' selected':''}>${esc(c.name)}</option>`).join('')}<option value="__new">+ Nouveau client…</option></select></div>
+ <div><label for="e_i">Date d’émission *</label><input id="e_i" type="date" data-k="issue" value="${d.issue}"></div>
+ <div><label for="e_d">${dv?'Valable jusqu’au':'Échéance'} *</label><input id="e_d" type="date" data-k="due" value="${d.due}"></div></div>
+ <div id="nc" class="grid g2" style="display:none;margin-top:10px"><div><label for="nc_n">Nom du client *</label><input id="nc_n"></div><div><label for="nc_p">Téléphone</label><input id="nc_p"></div><div><label for="nc_a">Adresse</label><input id="nc_a"></div></div>
+ <h2 style="margin-top:18px">Lignes</h2><div id="lines" class="tw"></div>${L?'':'<button type="button" class="btn s" onclick="addLine()">+ Ajouter une ligne</button>'}
+ <div class="grid g2" style="margin-top:14px"><div><label for="e_ds">Remise (%)</label><input id="e_ds" data-k="discount" inputmode="decimal" value="${esc(d.discount)}"${dis}></div>
+ <div><label for="e_t">TVA (%) <span class="h">0 si non assujetti</span></label><input id="e_t" data-k="tva" inputmode="decimal" value="${esc(d.tva)}"${dis}></div></div>
+ <div class="tot" id="tot" style="margin-top:14px"></div>
+ <div class="grid g2"><div><label for="e_n">Notes</label><textarea id="e_n" data-k="notes">${esc(d.notes)}</textarea></div><div><label for="e_tm">Conditions de paiement</label><textarea id="e_tm" data-k="terms">${esc(d.terms)}</textarea></div></div>
+ <div id="eerr"></div><div class="row" style="margin-top:14px"><button type="button" class="btn p" onclick="saveDoc()">Enregistrer</button><button type="button" class="btn" onclick="go(${d.isNew?"'/docs'":`'/doc/${d.id}'`})">Annuler</button></div></form>${setTimeout(()=>{lineRows();upTot()})&&''}`}
+function lineRows(){const L=locked(EDIT),dis=L?' disabled':'';$('#lines').innerHTML=`<table><tr><th>Description</th><th style="width:80px">Qté</th><th style="width:120px">Prix unit. (MAD)</th><th class="r" style="width:120px">Total</th><th></th></tr>${EDIT.lines.map((l,i)=>`<tr><td><input aria-label="Description ligne ${i+1}" data-i="${i}" data-f="d" value="${esc(l.d)}"${dis}></td><td><input aria-label="Quantité ligne ${i+1}" inputmode="decimal" data-i="${i}" data-f="q" value="${esc(l.q)}"${dis}></td><td><input aria-label="Prix unitaire ligne ${i+1}" inputmode="decimal" data-i="${i}" data-f="p" value="${esc(l.p)}"${dis}></td><td class="r" id="lt${i}">${fmt(Math.round(num(l.q)*toC(l.p)))}</td><td>${!L&&EDIT.lines.length>1?`<button type="button" class="btn s d" aria-label="Supprimer la ligne ${i+1}" onclick="rmLine(${i})">×</button>`:''}</td></tr>`).join('')}</table>`}
+function addLine(){EDIT.lines.push({d:'',q:'1',p:''});lineRows()}function rmLine(i){EDIT.lines.splice(i,1);lineRows();upTot()}
+function ein(e){const t=e.target;if(t.dataset.i!==undefined){EDIT.lines[+t.dataset.i][t.dataset.f]=t.value;const l=EDIT.lines[+t.dataset.i],c=$('#lt'+t.dataset.i);if(c)c.textContent=fmt(Math.round(num(l.q)*toC(l.p)))}
+ else if(t.dataset.k){EDIT[t.dataset.k]=t.value;if(t.dataset.k==='clientId')$('#nc').style.display=t.value==='__new'?'grid':'none'}upTot()}
+function upTot(){const c=calc(EDIT),el=$('#tot');if(!el)return;el.innerHTML=`<div><span>Sous-total</span><span>${fmt(c.sub)}</span></div>${c.disc?`<div><span>Remise</span><span>-${fmt(c.disc)}</span></div>`:''}<div><span>TVA (${num(EDIT.tva)} %)</span><span>${fmt(c.tva)}</span></div><div class="t"><span>Total</span><span>${fmt(c.total)}</span></div>`}
+function saveDoc(){const d=EDIT,e=[];if(!d.clientId)e.push('Choisissez un client.');
+ let nn='';if(d.clientId==='__new'){nn=$('#nc_n').value.trim();if(!nn)e.push('Nom du nouveau client requis.')}
+ if(!d.issue||!d.due)e.push('Dates obligatoires.');else if(d.due<d.issue)e.push('La date d’échéance/validité doit être postérieure à l’émission.');
+ const ls=d.lines.filter(l=>l.d.trim()||String(l.p).trim());if(!ls.length)e.push('Ajoutez au moins une ligne.');
+ ls.forEach((l,i)=>{if(!l.d.trim())e.push(`Ligne ${i+1} : description manquante.`);if(!(num(l.q)>0))e.push(`Ligne ${i+1} : quantité invalide.`);if(!String(l.p).trim()||!isFinite(Number(String(l.p).replace(',','.')))||toC(l.p)<0)e.push(`Ligne ${i+1} : prix invalide.`)});
+ for(const[k,t]of[['discount','Remise'],['tva','TVA']])if(!(num(d[k])>=0&&num(d[k])<=100)||!isFinite(Number(String(d[k]||0).replace(',','.'))))e.push(t+' : entrez un pourcentage entre 0 et 100.');
+ if(e.length){$('#eerr').innerHTML=`<div class="err" role="alert">${e.join('<br>')}</div>`;return}
+ if(d.clientId==='__new'){const ex=db.clients.find(c=>c.name.toLowerCase()===nn.toLowerCase());if(ex)d.clientId=ex.id;else{const c={id:uid(),name:nn,phone:$('#nc_p').value.trim(),address:$('#nc_a').value.trim(),email:'',ice:''};db.clients.push(c);d.clientId=c.id}}
+ d.lines=ls;d.upd=new Date().toISOString();if(d.isNew){d.number=nextNo(d.type);delete d.isNew;db.docs.push(d)}else db.docs[db.docs.findIndex(x=>x.id===d.id)]=d;save();toast('Document enregistré.');go('/doc/'+d.id)}
+/* document view */
+function vDoc(id){const d=find(id);if(!d)return nf();const c=cl(d.clientId)||{},t=calc(d),fa=d.type==='facture',st=status(d),inv=d.invoiceId&&find(d.invoiceId);
+ const acts=fa?(d.status==='Brouillon'?`<button class="btn p" onclick="setSt('${d.id}','Émise')">Émettre la facture</button>`:(!d.payments.length?`<button class="btn" onclick="setSt('${d.id}','Brouillon')">Repasser en brouillon</button>`:'')):`<label class="h" for="qs" style="margin:0">Statut</label><select id="qs" style="width:auto" onchange="setSt('${d.id}',this.value)">${['Brouillon','Envoyé','Accepté','Refusé','Expiré'].map(s=>`<option${d.status===s?' selected':''}>${s}</option>`).join('')}</select>${inv?`<button class="btn" onclick="go('/doc/${inv.id}')">Voir la facture ${esc(inv.number)}</button>`:(st==='Accepté'?`<button class="btn p" onclick="toInv('${d.id}')">Convertir en facture</button>`:'')}`;
+ return`<div class="row sp"><div><h1>${fa?'Facture':'Devis'} ${esc(d.number)}</h1>${badge(st)} <span class="h">${c.id?`<a href="#/client/${c.id}" onclick="go('/client/${c.id}');return false">${esc(c.name)}</a>`:'—'}</span></div><div class="row"><button class="btn p" onclick="pdf('${d.id}')">Télécharger le PDF</button><button class="btn" onclick="go('/edit/${d.id}')">Modifier</button><button class="btn" onclick="dup('${d.id}')">Dupliquer</button>${d.status==='Brouillon'?`<button class="btn d" onclick="delDoc('${d.id}')">Supprimer</button>`:''}</div></div><br>
+ <div class="card row">${acts}</div>
+ <div class="card"><p class="h">Émis le ${fd(d.issue)} · ${fa?'échéance':'valable jusqu’au'} ${fd(d.due)}${d.fromQuote?' · issu du devis '+esc(d.fromQuote):''}</p><div class="tw"><table><tr><th>Description</th><th class="r">Qté</th><th class="r">Prix unit.</th><th class="r">Total</th></tr>${d.lines.map(l=>`<tr><td>${esc(l.d)}</td><td class="r">${esc(l.q)}</td><td class="r">${fmt(toC(l.p))}</td><td class="r">${fmt(Math.round(num(l.q)*toC(l.p)))}</td></tr>`).join('')}</table></div><br>
+ <div class="tot"><div><span>Sous-total</span><span>${fmt(t.sub)}</span></div>${t.disc?`<div><span>Remise (${num(d.discount)} %)</span><span>-${fmt(t.disc)}</span></div>`:''}<div><span>TVA (${num(d.tva)} %)</span><span>${fmt(t.tva)}</span></div><div class="t"><span>Total</span><span>${fmt(t.total)}</span></div></div>${d.notes?`<p><b>Notes</b><br>${esc(d.notes).replace(/\n/g,'<br>')}</p>`:''}${d.terms?`<p><b>Conditions</b><br>${esc(d.terms).replace(/\n/g,'<br>')}</p>`:''}</div>
+ ${fa&&d.status!=='Brouillon'?`<div class="card"><h2>Paiements</h2>${d.payments.length?`<div class="tw"><table>${d.payments.map((p,i)=>`<tr><td>${fd(p.date)}</td><td>${esc(p.note||'')}</td><td class="r">${fmt(p.amt)}</td><td class="r"><button class="btn s d" aria-label="Supprimer le paiement" onclick="rmPay('${d.id}',${i})">×</button></td></tr>`).join('')}</table></div>`:'<p class="h">Aucun paiement enregistré.</p>'}<div class="tot"><div><span>Payé</span><span>${fmt(t.paid)}</span></div><div class="t"><span>Reste à payer</span><span>${fmt(t.rest)}</span></div></div>
+ <div class="grid" style="margin-top:12px"><div><label for="p_a">Montant (MAD)</label><input id="p_a" inputmode="decimal" value="${t.rest>0?(t.rest/100).toFixed(2):''}"></div><div><label for="p_d">Date</label><input id="p_d" type="date" value="${today()}"></div><div><label for="p_n">Mode / note</label><input id="p_n" placeholder="Espèces, virement…"></div></div><div id="perr"></div><button class="btn p" style="margin-top:10px" onclick="addPay('${d.id}')">Enregistrer le paiement</button></div>`:''}`}
+function setSt(id,s){const d=find(id);if(d.type==='facture'&&s==='Brouillon'&&d.payments.length)return;d.status=s;d.upd=new Date().toISOString();save();render()}
+function addPay(id){const d=find(id),a=toC($('#p_a').value),dt=$('#p_d').value,t=calc(d),m=x=>$('#perr').innerHTML=`<div class="err" role="alert">${x}</div>`;
+ if(a<=0)return m('Montant invalide.');if(!dt)return m('Date requise.');if(a>t.rest)return m('Le paiement dépasse le reste à payer ('+fmt(t.rest)+').');
+ d.payments.push({amt:a,date:dt,note:$('#p_n').value.trim()});d.upd=new Date().toISOString();save();toast('Paiement enregistré.');render()}
+function rmPay(id,i){if(confirm('Supprimer ce paiement ?')){const d=find(id);d.payments.splice(i,1);save();render()}}
+function toInv(id){const q=find(id);if(q.invoiceId||db.docs.some(x=>x.fromId===q.id)){toast('Ce devis a déjà été converti.');return}
+ const P=db.profile,f={id:uid(),type:'facture',number:nextNo('facture'),clientId:q.clientId,status:'Brouillon',issue:today(),due:addDays(today(),+(P.terms??30)),lines:JSON.parse(JSON.stringify(q.lines)),discount:q.discount,tva:q.tva,notes:q.notes,terms:q.terms||P.payTerms||'',payments:[],fromId:q.id,fromQuote:q.number,upd:new Date().toISOString()};
+ db.docs.push(f);q.invoiceId=f.id;save();toast('Facture créée en brouillon.');go('/doc/'+f.id)}
+function dup(id){const o=find(id),d=JSON.parse(JSON.stringify(o));Object.assign(d,{id:uid(),number:nextNo(o.type),status:'Brouillon',issue:today(),payments:[],upd:new Date().toISOString()});d.due=addDays(today(),o.type==='devis'?30:+(db.profile.terms??30));delete d.invoiceId;delete d.fromId;delete d.fromQuote;db.docs.push(d);save();toast('Document dupliqué (brouillon).');go('/doc/'+d.id)}
+function delDoc(id){if(confirm('Supprimer ce brouillon ?')){const d=find(id);db.docs.forEach(x=>{if(x.invoiceId===id)delete x.invoiceId});db.docs=db.docs.filter(x=>x.id!==id);save();go('/docs')}}
+/* PDF */
+async function saveFile(name,blob){let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
+ if(dl){try{await dl.save({filename:name,data:blob});toast('Fichier prêt.')}catch(e){if(e.code!=='declined')toast('Téléchargement impossible.')}return}
+ if(/pdf$/.test(name)&&matchMedia('(pointer:coarse)').matches&&navigator.canShare){const f=new File([blob],name,{type:'application/pdf'});if(navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:name});return}catch(e){if(e.name==='AbortError')return}}}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+function pdf(id){const d=find(id),J=window.jspdf&&window.jspdf.jsPDF;if(!J){toast('Bibliothèque PDF non chargée : vérifiez votre connexion.');return}
+ const P=db.profile,c=cl(d.clientId)||{},t=calc(d),fa=d.type==='facture',col=fa?[15,118,110]:[27,42,73],doc=new J({unit:'mm',format:'a4'}),W=210,M=16;let y=M;
+ if(P.logo){try{const w=Math.min(48,16*P.logo.w/P.logo.h),h=w*P.logo.h/P.logo.w;doc.addImage(P.logo.u,'PNG',M,y,w,h);y+=h+3}catch(e){}}
+ doc.setTextColor(20);doc.setFont('helvetica','bold').setFontSize(13).text(P.name||'Mon entreprise',M,y+4);y+=9;doc.setFont('helvetica','normal').setFontSize(9).setTextColor(90);
+ const info=[P.address,[P.phone,P.email].filter(Boolean).join('  ·  '),[P.ice&&'ICE : '+P.ice,P.if&&'IF : '+P.if,P.rc&&'RC : '+P.rc,P.patente&&'Patente : '+P.patente].filter(Boolean).join('  ·  ')].filter(Boolean);
+ info.forEach(s=>{const ln=doc.splitTextToSize(s,95);doc.text(ln,M,y);y+=ln.length*4.2});
+ doc.setTextColor(...col).setFont('helvetica','bold').setFontSize(26).text(fa?'FACTURE':'DEVIS',W-M,M+8,{align:'right'});
+ doc.setTextColor(40).setFontSize(10).text('N° '+d.number,W-M,M+16,{align:'right'});doc.setFont('helvetica','normal').setTextColor(90).text('Date : '+fd(d.issue),W-M,M+22,{align:'right'});doc.text((fa?'Échéance : ':'Valable jusqu’au : ')+fd(d.due),W-M,M+27,{align:'right'});
+ y=Math.max(y,M+34)+4;doc.setDrawColor(...col).setLineWidth(.8).line(M,y,W-M,y);y+=8;
+ doc.setFontSize(8).setTextColor(130).text(fa?'FACTURÉ À':'DESTINATAIRE',M,y);y+=5;doc.setFont('helvetica','bold').setFontSize(11).setTextColor(20).text(c.name||'—',M,y);y+=5;doc.setFont('helvetica','normal').setFontSize(9).setTextColor(70);
+ [c.address,[c.phone,c.email].filter(Boolean).join('  ·  '),c.ice&&'ICE : '+c.ice].filter(Boolean).forEach(s=>{doc.text(doc.splitTextToSize(s,110),M,y);y+=4.5});y+=4;
+ doc.autoTable({startY:y,margin:{left:M,right:M,bottom:24},head:[['Description',{content:'Qté',styles:{halign:'right'}},{content:'Prix unit.',styles:{halign:'right'}},{content:'Total',styles:{halign:'right'}}]],body:d.lines.map(l=>[l.d,l.q,fmt(toC(l.p)),fmt(Math.round(num(l.q)*toC(l.p)))]),theme:'striped',headStyles:{fillColor:col,textColor:255},styles:{fontSize:9,cellPadding:2.5,overflow:'linebreak'},columnStyles:{0:{cellWidth:'auto'},1:{halign:'right',cellWidth:18},2:{halign:'right',cellWidth:34},3:{halign:'right',cellWidth:34}}});
+ y=doc.lastAutoTable.finalY+7;const chk=n=>{if(y+n>272){doc.addPage();y=M}};chk(50);
+ const row=(a,b,bold)=>{doc.setFont('helvetica',bold?'bold':'normal').setFontSize(bold?12:10).setTextColor(bold?col[0]:50,bold?col[1]:50,bold?col[2]:50);doc.text(a,W-M-62,y);doc.text(b,W-M,y,{align:'right'});y+=bold?7:5.5};
+ row('Sous-total',fmt(t.sub));if(t.disc)row('Remise ('+num(d.discount)+' %)','-'+fmt(t.disc));row('TVA ('+num(d.tva)+' %)',fmt(t.tva));doc.setDrawColor(...col).setLineWidth(.4).line(W-M-62,y-3.5,W-M,y-3.5);y+=1;row('TOTAL',fmt(t.total),true);
+ if(fa&&t.paid){row('Déjà payé',fmt(t.paid));row('Reste à payer',fmt(t.rest),true)}
+ const blk=(h,s)=>{if(!s)return;const ln=doc.splitTextToSize(s,W-2*M);chk(8+ln.length*4.5);y+=3;doc.setFont('helvetica','bold').setFontSize(9).setTextColor(40).text(h,M,y);y+=4.5;doc.setFont('helvetica','normal').setTextColor(80).text(ln,M,y);y+=ln.length*4.5};
+ blk('Notes',d.notes);blk('Conditions de paiement',d.terms);if(fa)blk('Coordonnées bancaires',P.bank);
+ const n=doc.getNumberOfPages();for(let i=1;i<=n;i++){doc.setPage(i);doc.setDrawColor(200).setLineWidth(.2).line(M,282,W-M,282);doc.setFont('helvetica','normal').setFontSize(7.5).setTextColor(120);if(P.legal)doc.text(doc.splitTextToSize(P.legal,W-2*M-20),M,286);doc.text(`Page ${i}/${n}`,W-M,286,{align:'right'})}
+ saveFile(d.number+'.pdf',doc.output('blob'))}
+/* settings */
+const SF=[['name','Nom de l’entreprise','','Nom affiché sur vos documents'],['phone','Téléphone'],['email','E-mail'],['address','Adresse'],['ice','ICE','','Souvent demandé sur les factures entre professionnels — à vérifier'],['if','Identifiant fiscal (IF)'],['rc','Registre de commerce (RC)'],['patente','Patente / taxe professionnelle'],['bank','RIB / coordonnées bancaires','','Facultatif, affiché sur les factures'],['legal','Mention légale en pied de page','','Ex. forme juridique, capital — facultatif']];
+function vSet(){const P=db.profile;return`<h1>Réglages</h1>${storeNote()}<div class="card"><h2>Votre entreprise</h2><div class="grid g2">${SF.map(([k,t,,h])=>`<div><label for="s_${k}">${t}</label><input id="s_${k}" value="${esc(P[k]||'')}">${h?`<span class="h">${h}</span>`:''}</div>`).join('')}</div>
+<div style="margin-top:12px"><label for="s_logo">Logo (PNG/JPG)</label><input id="s_logo" type="file" accept="image/*" onchange="logo(this)">${P.logo?`<div class="row" style="margin-top:8px"><img src="${P.logo.u}" alt="Logo" style="height:40px"><button class="btn s d" onclick="db.profile.logo=null;save();render()">Retirer</button></div>`:''}</div></div>
+<div class="card"><h2>Documents</h2><div class="grid g2"><div><label for="s_pDev">Préfixe des devis</label><input id="s_pDev" value="${esc(P.pDev||'DEV')}"></div><div><label for="s_pFac">Préfixe des factures</label><input id="s_pFac" value="${esc(P.pFac||'FAC')}"></div>
+<div><label for="s_terms">Délai de paiement par défaut (jours)</label><input id="s_terms" type="number" min="0" value="${P.terms??30}"></div><div><label for="s_tva">TVA par défaut (%)</label><input id="s_tva" inputmode="decimal" value="${esc(P.tva??0)}"><span class="h">0 par défaut : à régler selon votre régime, avec votre comptable.</span></div></div>
+<div style="margin-top:12px"><label for="s_payTerms">Conditions de paiement par défaut (factures)</label><textarea id="s_payTerms">${esc(P.payTerms||'')}</textarea></div><p class="h">Devise : MAD (dirham marocain). Numérotation : préfixe-année-numéro (ex. ${esc(P.pFac||'FAC')}-${new Date().getFullYear()}-0001).</p>
+<div id="serr"></div><button class="btn p" onclick="saveSet()">Enregistrer</button></div>
+<div class="card"><h2>Sauvegarde</h2><p class="h">Une copie JSON contient tous vos clients et documents. Conservez-la ailleurs que sur cet appareil.</p><div class="row"><button class="btn" onclick="exp()">Exporter mes données</button><label class="btn" style="margin:0">Importer<input type="file" accept=".json,application/json" hidden onchange="imp(this)"></label><button class="btn d" onclick="wipe()">Tout effacer</button></div></div>${warn}`}
+function saveSet(){const v=k=>$('#s_'+k).value.trim(),P=db.profile,e=[];const em=v('email');if(em&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))e.push('E-mail invalide.');
+ const t=num(v('tva')),d=+v('terms');if(!(t>=0&&t<=100))e.push('TVA : 0 à 100.');if(!(d>=0&&d<=365))e.push('Délai : 0 à 365 jours.');if(!/^[A-Za-z0-9-]{1,10}$/.test(v('pDev')||'DEV')||!/^[A-Za-z0-9-]{1,10}$/.test(v('pFac')||'FAC'))e.push('Préfixes : lettres/chiffres, 10 caractères max.');
+ if(e.length){$('#serr').innerHTML=`<div class="err" role="alert">${e.join('<br>')}</div>`;return}
+ SF.forEach(([k])=>P[k]=v(k));P.pDev=v('pDev')||'DEV';P.pFac=v('pFac')||'FAC';P.terms=d;P.tva=t;P.payTerms=v('payTerms');save();toast('Réglages enregistrés.');render()}
+function logo(i){const f=i.files[0];if(!f)return;if(f.size>3e6){toast('Image trop lourde (3 Mo max).');return}const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,400/im.width,200/im.height),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);db.profile.logo={u:c.toDataURL('image/png'),w:c.width,h:c.height};save();render()};im.onerror=()=>toast('Image illisible.');im.src=r.result};r.readAsDataURL(f)}
+function exp(){saveFile('fodx-facture-sauvegarde-'+today()+'.json',new Blob([JSON.stringify(db,null,1)],{type:'application/json'}))}
+function imp(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!Array.isArray(o.clients)||!Array.isArray(o.docs)||!o.clients.every(c=>c&&typeof c.id==='string'&&typeof c.name==='string')||!o.docs.every(d=>d&&typeof d.id==='string'&&Array.isArray(d.lines)&&Array.isArray(d.payments||[])))throw 0;if(!confirm('Remplacer toutes les données actuelles par cette sauvegarde ?'))return;try{localStorage.setItem(K+'_avant_import',JSON.stringify(db))}catch(e){}db=Object.assign({profile:{},seq:{}},o);db.profile=db.profile||{};db.seq=db.seq||{};save();toast('Sauvegarde importée.');go('/')}catch(e){toast('Fichier de sauvegarde invalide.')}};r.readAsText(f)}
+function wipe(){if(confirm('Effacer définitivement TOUTES les données de ce navigateur ?')&&confirm('Dernière confirmation : cette action est irréversible.')){db={profile:{},clients:[],docs:[],seq:{}};save();go('/')}}
+render();
+if(corrupt)setTimeout(()=>alert('Vos données enregistrées étaient illisibles. Une copie brute a été conservée dans ce navigateur (clé « '+K+'_corrompu_… »). Si vous avez une sauvegarde JSON, importez-la dans Réglages.'),300);
+let dip;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;$('#inst').style.display='inline-flex'});
+$('#inst').onclick=async()=>{if(!dip)return;dip.prompt();try{await dip.userChoice}catch(e){}dip=null;$('#inst').style.display='none'};
+addEventListener('appinstalled',()=>{$('#inst').style.display='none'});
+if('serviceWorker' in navigator&&location.protocol!=='file:'){let rl=false;
+ const ask=w=>{if($('#upd'))return;const d=document.createElement('div');d.id='upd';d.className='note';d.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:10;display:flex;gap:10px;align-items:center;justify-content:space-between';d.innerHTML='<span>Une nouvelle version est disponible.</span>';const b=document.createElement('button');b.className='btn s p';b.textContent='Mettre à jour';b.onclick=()=>w.postMessage('SKIP');d.appendChild(b);document.body.appendChild(d)};
+ navigator.serviceWorker.register('service-worker.js').then(reg=>{if(reg.waiting&&navigator.serviceWorker.controller)ask(reg.waiting);reg.addEventListener('updatefound',()=>{const w=reg.installing;w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)ask(w)})})}).catch(()=>{});
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!rl){rl=true;location.reload()}})}
+</script>
+</body>
+</html>
